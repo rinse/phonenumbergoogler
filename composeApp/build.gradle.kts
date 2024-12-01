@@ -16,11 +16,6 @@ kotlin {
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
-    js {
-        browser()
-        binaries.executable()
-    }
-
     listOf(
         iosX64(),
         iosArm64(),
@@ -60,11 +55,6 @@ kotlin {
             implementation(libs.androidx.activityCompose)
             implementation(libs.kotlinx.coroutines.android)
         }
-
-        jsMain.dependencies {
-            implementation(compose.html.core)
-        }
-
     }
 }
 
