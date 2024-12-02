@@ -34,6 +34,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.materialIconsExtended)
             implementation(libs.napier)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.androidx.navigation.composee)
@@ -41,6 +42,11 @@ kotlin {
             implementation(libs.coil)
             implementation(libs.coil.network.ktor)
             implementation(libs.multiplatformSettings)
+            implementation(libs.kodein)
+            implementation(libs.kodein.compose)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.material.icons)
+            implementation(libs.material.icons.extended)
         }
 
         commonTest.dependencies {
