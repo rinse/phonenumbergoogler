@@ -33,7 +33,7 @@ class CallHistoryReaderAndroid(
                             ?: throw IllegalStateException("Call date is not epoch milliseconds: $date"),
                         displayName = displayName,
                     )
-                    yield(callHistory)
+                    this.yield(callHistory)
                 }
             }
         }

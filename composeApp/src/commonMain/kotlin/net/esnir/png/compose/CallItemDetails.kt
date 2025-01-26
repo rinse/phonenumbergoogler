@@ -1,14 +1,11 @@
 package net.esnir.png.compose
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,15 +15,13 @@ import net.esnir.png.callhistory.CallContent
 
 @Composable
 fun CallItemDetails(item: CallContent, modifier: Modifier = Modifier) {
-    Surface(modifier = modifier) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            DisplayName(item.displayName, item.number)
-            Row {
-                Icon(CallTypeIcon(item.type), null)
-                Text(item.type.name)
-            }
-            SearchList(item.number)
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        DisplayName(item.displayName, item.number)
+        Row {
+            Icon(CallTypeIcon(item.type), null)
+            Text(item.type.name)
         }
+        SearchList(item.number)
     }
 }
 
