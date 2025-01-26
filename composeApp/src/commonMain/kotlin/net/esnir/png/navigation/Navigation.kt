@@ -17,6 +17,9 @@ object Navigation {
     data class Item(
         val content: CallContent,
     )
+
+    @Serializable
+    data object Licence
 }
 
 inline fun <reified T> navTypeOf(

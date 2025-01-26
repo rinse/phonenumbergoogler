@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,7 +57,8 @@ fun RootContent() {
                 LaunchedEffect(Unit) {
                     topAppBar = {
                         CallHistoryListTopAppBar(
-                            refresh = { callHistoryManager.refresh() },
+                            onRefresh = { callHistoryManager.refresh() },
+                            onOpenLicence = { navController.navigate(Navigation.Licence) },
                         )
                     }
                 }
@@ -68,6 +73,16 @@ fun RootContent() {
                     item.content,
                     modifier = Modifier.padding(paddings).fillMaxSize()
                 )
+                LaunchedEffect(Unit) {
+                    topAppBar = {
+                        CallHistoryItemTopAppBar(
+                            goBack = navController::navigateUp,
+                        )
+                    }
+                }
+            }
+            composable<Navigation.Licence> {
+                LicenceContent(modifier = Modifier.padding(paddings).fillMaxSize())
                 LaunchedEffect(Unit) {
                     topAppBar = {
                         CallHistoryItemTopAppBar(
@@ -98,9 +113,11 @@ fun CallHistoryList(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun CallHistoryListTopAppBar(
-    refresh: () -> Unit,
+    onRefresh: () -> Unit,
+    onOpenLicence: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var isExpanded by mutableStateOf(false)
     TopAppBar(
         title = { Text("Phone Number Googler") },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -108,11 +125,38 @@ fun CallHistoryListTopAppBar(
         ),
         modifier = modifier,
         actions = {
-            IconButton(onClick = refresh) {
-                Icon(Icons.Default.Refresh, "Refresh")
-            }
+            TopAppBarMenu(
+                onRefresh = onRefresh,
+                isExpanded = isExpanded,
+                onExpandedChange = { isExpanded = it },
+                onOpenLicence = onOpenLicence,
+            )
         }
     )
+}
+
+@Composable
+fun TopAppBarMenu(
+    onRefresh: () -> Unit,
+    isExpanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    onOpenLicence: () -> Unit,
+) {
+    IconButton(onClick = { onExpandedChange(!isExpanded) }) {
+        Icon(Icons.Default.Menu, "Menu")
+    }
+    DropdownMenu(expanded = isExpanded, onDismissRequest = { onExpandedChange(false) }) {
+        DropdownMenuItem(
+            leadingIcon = { Icon(Icons.Default.Refresh, "Refresh") },
+            text = { Text("Refresh") },
+            onClick = { onExpandedChange(false); onRefresh() },
+        )
+        DropdownMenuItem(
+            leadingIcon = { Icon(Icons.AutoMirrored.Filled.List, "License") },
+            text = { Text("Licence Information") },
+            onClick = { onExpandedChange(false); onOpenLicence() },
+        )
+    }
 }
 
 @Composable

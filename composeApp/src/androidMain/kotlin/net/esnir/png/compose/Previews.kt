@@ -11,7 +11,7 @@ import net.esnir.png.callhistory.CallType
 @Preview
 @Composable
 fun CallHistoryListTopBarPreview() {
-    CallHistoryListTopAppBar(refresh = {})
+    CallHistoryListTopAppBar(onRefresh = {}, onOpenLicence = {})
 }
 
 @Preview

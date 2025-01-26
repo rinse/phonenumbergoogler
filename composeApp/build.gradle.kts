@@ -1,4 +1,7 @@
+import net.esnir.png.GenerateLicenceResource
+import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 import org.jetbrains.compose.ExperimentalComposeLibrary
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
@@ -7,12 +10,14 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.licensee)
 }
 
 kotlin {
     jvmToolchain(21)
     androidTarget {
         //https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-test.html
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
@@ -84,4 +89,36 @@ android {
 dependencies {
     androidTestImplementation(libs.androidx.uitest.junit4)
     debugImplementation(libs.androidx.uitest.testManifest)
+}
+
+licensee {
+    // allow("Apache-1.1")
+    allow("Apache-2.0")
+    // allow("BSD-2-Clause")
+    // allow("BSD-3-Clause")
+    // allow("ISC")
+    allow("MIT")
+}
+
+enum class LicenceResource(val sourceSetName: String, val licenseeName: String) {
+    AndroidMain(sourceSetName = "androidMain", licenseeName = "androidRelease"),
+    IOSX64(sourceSetName = "iosX64Main", licenseeName = "iosX64"),
+    IOSArm64(sourceSetName = "iosArm64Main", licenseeName = "iosArm64"),
+    IosSimulatorArm64(sourceSetName = "iosSimulatorArm64Main", licenseeName = "iosSimulatorArm64"),
+}
+
+compose.resources {
+    for (item in LicenceResource.values()) {
+        val taskName = "generateLicenceResourceFor${item.sourceSetName.uppercaseFirstChar()}"
+        val task = tasks.register(taskName, GenerateLicenceResource::class.java) {
+            dependsOn("licensee")
+            group = "licence"
+            sourceSetName = item.sourceSetName
+            licenseeName = item.licenseeName
+        }
+        customDirectory(
+            sourceSetName = item.sourceSetName,
+            directoryProvider = task.map { it.outputDir },
+        )
+    }
 }
