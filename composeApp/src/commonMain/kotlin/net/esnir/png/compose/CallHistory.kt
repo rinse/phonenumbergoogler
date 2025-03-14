@@ -3,6 +3,7 @@ package net.esnir.png.compose
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -37,7 +38,10 @@ import kotlinx.datetime.format.DateTimeComponents
 import net.esnir.png.callhistory.CallContent
 import net.esnir.png.callhistory.CallHistoryManager
 import net.esnir.png.callhistory.CallType
+import net.esnir.png.callstate.CallState
+import net.esnir.png.callstate.rememberCallState
 
+// TODO: 電話番号をブロックする機能
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CallHistoryControl(
@@ -54,6 +58,11 @@ fun CallHistoryControl(
             LinearProgressIndicator(gapSize = progressBarGapSize)
         } else {
             Spacer(modifier = Modifier.height(progressBarGapSize))
+        }
+        // 着信中、UIを下にずらす
+        val callState = rememberCallState()
+        if (callState == CallState.RINGING) {
+            Spacer(modifier = Modifier.fillMaxHeight(0.5f))
         }
         CallHistorySpacer(
             manager.value.firstOrNull(),
