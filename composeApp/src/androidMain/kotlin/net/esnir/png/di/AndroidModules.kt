@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 import io.github.aakira.napier.Napier
+import net.esnir.png.blockednumber.OpenBlockedNumber
+import net.esnir.png.blocknumber.OpenBlockedNumberAndroid
 import net.esnir.png.callhistory.CallHistoryReader
 import net.esnir.png.callhistory.CallHistoryReaderAndroid
 import net.esnir.png.callhistory.CallHistoryReaderNone
@@ -18,8 +20,9 @@ import org.kodein.di.bindSingleton
 
 fun androidModules(context: Context) = DI.Module("Android") {
     bindSingleton<CallHistoryReader> {
-        val permission =
-            ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG)
+        val permission = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.READ_CALL_LOG,
+        )
         if (permission == PackageManager.PERMISSION_GRANTED) {
             CallHistoryReaderAndroid(context)
         } else {
@@ -28,8 +31,9 @@ fun androidModules(context: Context) = DI.Module("Android") {
     }
 
     bindSingleton<PhoneCallStateProvider> {
-        val permission =
-            ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
+        val permission = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.READ_PHONE_STATE,
+        )
         when {
             permission == PackageManager.PERMISSION_DENIED -> {
                 Napier.w("PhoneCallStateProvider is disabled because READ_PHONE_STATE is denied")
@@ -46,8 +50,13 @@ fun androidModules(context: Context) = DI.Module("Android") {
                 PhoneCallStateProviderAndroidOld(context)
             }
 
-            else ->
-                throw Exception("The minimum build version is ${Build.VERSION_CODES.S}. Current SDK version: ${Build.VERSION.SDK_INT}")
+            else -> throw Exception(
+                "The minimum build version is ${Build.VERSION_CODES.S}. Current SDK version: ${Build.VERSION.SDK_INT}"
+            )
         }
+    }
+
+    bindSingleton<OpenBlockedNumber> {
+        OpenBlockedNumberAndroid(context)
     }
 }

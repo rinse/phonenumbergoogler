@@ -41,7 +41,6 @@ import net.esnir.png.callhistory.CallType
 import net.esnir.png.callstate.CallState
 import net.esnir.png.callstate.rememberCallState
 
-// TODO: 電話番号をブロックする機能
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CallHistoryControl(

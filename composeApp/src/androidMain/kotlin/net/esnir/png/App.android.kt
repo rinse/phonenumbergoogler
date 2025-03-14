@@ -16,7 +16,7 @@ class AppActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         Napier.base(DebugAntilog())
-        val module = androidModules(this.applicationContext)
+        val module = androidModules(this)
         setContent { App(module) }
     }
 }
