@@ -25,6 +25,7 @@ import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -62,6 +63,10 @@ fun CallHistoryControl(
         val callState = rememberCallState()
         if (callState == CallState.RINGING) {
             Spacer(modifier = Modifier.fillMaxHeight(0.5f))
+        }
+        // 着信があったらリストを更新する
+        LaunchedEffect(callState) {
+            manager.refresh()
         }
         CallHistorySpacer(
             manager.value.firstOrNull(),
