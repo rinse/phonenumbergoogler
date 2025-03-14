@@ -9,7 +9,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.withContext
 import org.kodein.di.compose.localDI
 import org.kodein.di.instance
 
@@ -40,8 +42,12 @@ fun rememberCallHistoryManager(): CallHistoryManager {
     val isLoading = remember { mutableStateOf(true) }
     var refreshCount by remember { mutableStateOf(0) }
     LaunchedEffect(refreshCount) {
-        val history = callHistoryReader.get()
+        val history = withContext(Dispatchers.Default) {
+            callHistoryReader.get()
+        }
         try {
+            this.ensureActive()
+            callHistory.clear()
             for (content in history) {
                 this.ensureActive()
                 callHistory.add(content)
@@ -57,7 +63,6 @@ fun rememberCallHistoryManager(): CallHistoryManager {
                 isLoadingState = isLoading,
                 refresh = {
                     isLoading.value = true
-                    callHistory.clear()
                     ++refreshCount
                 },
             )
